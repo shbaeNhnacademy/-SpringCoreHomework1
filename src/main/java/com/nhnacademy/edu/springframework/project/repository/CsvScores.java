@@ -41,6 +41,9 @@ public class CsvScores implements Scores {
 
     @Override
     public List<Score> findAll() {
-        return null;
+        if (this.scoreList.isEmpty()) {
+            throw new RuntimeException("반환할 CSV 스코어 리스트가 없습니다");
+        }
+        return scoreList;
     }
 }

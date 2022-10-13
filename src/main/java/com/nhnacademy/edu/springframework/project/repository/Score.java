@@ -7,7 +7,6 @@ public class Score {
     public Score(int studentSeq, int score) {
         this.studentSeq = studentSeq;
         this.score = score;
-        System.out.println(studentSeq + " ==> " + score);
     }
 
     public int getStudentSeq() {

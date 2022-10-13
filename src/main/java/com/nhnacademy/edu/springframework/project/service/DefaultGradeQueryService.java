@@ -1,8 +1,15 @@
 package com.nhnacademy.edu.springframework.project.service;
 
+import com.nhnacademy.edu.springframework.project.repository.CsvScores;
+import com.nhnacademy.edu.springframework.project.repository.CsvStudents;
 import com.nhnacademy.edu.springframework.project.repository.Score;
 
+import java.io.*;
+import java.sql.SQLClientInfoException;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DefaultGradeQueryService implements GradeQueryService {
 
@@ -18,12 +25,25 @@ public class DefaultGradeQueryService implements GradeQueryService {
         //
         // Hint. CsvStudents 클래스의 findAll() 이 있네요? 적절히 필터링하고 찾아오면 되겠죠?
         //
-        return null;
+
+        return CsvStudents.getInstance().findAll().stream()
+                .filter(student -> student.getName().equals(name))
+                .map(student -> student.getScore())
+                .collect(Collectors.toList());
     }
 
     @Override
     public Score getScoreByStudentSeq(int seq) {
         // TODO 6 : 학번으로 점수를 반환합니다. seq 인자가 학번입니다.
-        return null;
+
+        Optional<Score> optionalScore = CsvScores.getInstance().findAll().stream()
+                .filter(score -> score.getStudentSeq() == seq)
+                .findAny();
+        if (optionalScore.isPresent()) {
+            return optionalScore.get();
+        }else{
+            throw new NoSuchElementException("해당하는 학번에 매칭되는 점수가 없습니다");
+        }
+
     }
 }

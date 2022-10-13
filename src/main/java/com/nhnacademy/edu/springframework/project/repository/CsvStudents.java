@@ -2,13 +2,16 @@ package com.nhnacademy.edu.springframework.project.repository;
 
 import com.nhnacademy.edu.springframework.project.service.Student;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Collection;
-
-
+import java.util.Iterator;
+import java.util.List;
 
 
 public class CsvStudents implements Students {
 
+    List<Student> studentList = new ArrayList<>();
     private static CsvStudents csvStudents = new CsvStudents();
 
     private CsvStudents() {
@@ -25,12 +28,31 @@ public class CsvStudents implements Students {
     // 데이터를 적재하고 읽기 위해서, 적절한 자료구조를 사용하세요.
     @Override
     public void load() {
-
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        try (
+                InputStream inputStream = classLoader.getResource("data/student.csv").openStream();
+                BufferedReader reader=new BufferedReader(new InputStreamReader(inputStream));
+        ) {
+            String line=null;
+            while ((line = reader.readLine()) != null) {
+                String[] split = line.split(",");
+                studentList.add(new Student(Integer.parseInt(split[0]), split[1]));
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("CsvScores.load - FileNotFoundException " + e);
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            System.out.println("CsvScores.load - IOException " + e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Collection<Student> findAll() {
-        return null;
+        if (this.studentList.isEmpty()) {
+            throw new RuntimeException("반환할 CSV 학생명부가 없습니다");
+        }
+        return studentList;
     }
 
     /**
@@ -39,6 +61,13 @@ public class CsvStudents implements Students {
      */
     @Override
     public void merge(Collection<Score> scores) {
-
+//        Score[] objects = (Score[]) scores.toArray();
+        if (scores.size() != studentList.size()) {
+            throw new RuntimeException("학생 리스트와 스코어 리스트의 길이가 다릅니다");
+        }
+        int idx = -1;
+        for (Score next : scores) {
+            studentList.get(++idx).setScore(next);
+        }
     }
 }
