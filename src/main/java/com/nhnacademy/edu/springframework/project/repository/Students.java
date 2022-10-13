@@ -10,4 +10,6 @@ public interface Students {
     Collection<Student> findAll();
 
     void merge(Collection<Score> scores);
+
+    void clear();
 }

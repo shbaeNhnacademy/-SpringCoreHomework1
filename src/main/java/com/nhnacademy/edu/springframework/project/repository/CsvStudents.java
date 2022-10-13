@@ -3,10 +3,7 @@ package com.nhnacademy.edu.springframework.project.repository;
 import com.nhnacademy.edu.springframework.project.service.Student;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 public class CsvStudents implements Students {
@@ -61,13 +58,20 @@ public class CsvStudents implements Students {
      */
     @Override
     public void merge(Collection<Score> scores) {
-//        Score[] objects = (Score[]) scores.toArray();
         if (scores.size() != studentList.size()) {
-            throw new RuntimeException("학생 리스트와 스코어 리스트의 길이가 다릅니다");
+            throw new InputMismatchException("학생 리스트와 스코어 리스트의 길이가 다릅니다");
         }
         int idx = -1;
         for (Score next : scores) {
-            studentList.get(++idx).setScore(next);
+            Student student = studentList.get(++idx);
+            if (student.getSeq() == next.getStudentSeq()) {
+                student.setScore(next);
+            }
         }
+    }
+
+    @Override
+    public void clear() {
+        studentList.clear();
     }
 }

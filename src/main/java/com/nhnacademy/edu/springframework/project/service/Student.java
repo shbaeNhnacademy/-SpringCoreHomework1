@@ -24,6 +24,10 @@ public class Student {
         return name;
     }
 
+    public int getSeq() {
+        return seq;
+    }
+
     @Override
     public String toString() {
         return "Student{" +

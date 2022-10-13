@@ -46,4 +46,9 @@ public class CsvScores implements Scores {
         }
         return scoreList;
     }
+
+    @Override
+    public void clear() {
+        scoreList.clear();
+    }
 }

@@ -6,4 +6,6 @@ public interface Scores {
     void load();
 
     List<Score> findAll();
+
+    void clear();
 }
