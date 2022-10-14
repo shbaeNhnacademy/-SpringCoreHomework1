@@ -1,14 +1,16 @@
 package com.nhnacademy.edu.springframework.project.service;
 
-import com.nhnacademy.edu.springframework.project.repository.CsvScores;
-import com.nhnacademy.edu.springframework.project.repository.CsvStudents;
-import com.nhnacademy.edu.springframework.project.repository.Score;
-import com.nhnacademy.edu.springframework.project.repository.StudentService;
+import com.nhnacademy.edu.springframework.project.config.JavaConfig;
+import com.nhnacademy.edu.springframework.project.repository.*;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,18 +22,30 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = JavaConfig.class)
 class StudentServiceTest {
-    StudentService studentService = new DefaultStudentService();
+
+    @Autowired
+    private Students students;
+
+    @Autowired
+    private Scores scores;
+
+    @Autowired
+    StudentService studentService;
+
+    @Autowired
+    DataLoadService dataLoadService;
     @BeforeEach
     public void setup() {
-        DataLoadService dataLoadService = new CsvDataLoadService();
         dataLoadService.loadAndMerge();
     }
 
     @AfterEach
     public void finished() {
-        CsvScores.getInstance().clear();
-        CsvStudents.getInstance().clear();
+        scores.clear();
+        students.clear();
     }
     @Test
     void getPassedStudents() {

@@ -1,30 +1,42 @@
 package com.nhnacademy.edu.springframework.project.service;
 
-import com.nhnacademy.edu.springframework.project.repository.CsvScores;
-import com.nhnacademy.edu.springframework.project.repository.CsvStudents;
-import com.nhnacademy.edu.springframework.project.repository.Score;
+import com.nhnacademy.edu.springframework.project.config.JavaConfig;
+import com.nhnacademy.edu.springframework.project.repository.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = JavaConfig.class)
 class GradeQueryServiceTest {
 
-    GradeQueryService gradeQueryService = new DefaultGradeQueryService();
+    @Autowired
+    private Students students;
+
+    @Autowired
+    private Scores scores;
+
+    @Autowired
+    GradeQueryService gradeQueryService;
     @BeforeEach
     public void setup() {
-        CsvScores.getInstance().load();
-        CsvStudents.getInstance().load();
+        scores.load();
+        students.load();
     }
 
     @AfterEach
     public void finished() {
-        CsvScores.getInstance().clear();
-        CsvStudents.getInstance().clear();
+        scores.clear();
+        students.clear();
     }
     @Test
     void getScoreByStudentName() {
