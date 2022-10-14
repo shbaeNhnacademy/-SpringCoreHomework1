@@ -1,23 +1,20 @@
 package com.nhnacademy.edu.springframework.project.repository;
 
+import org.springframework.stereotype.Component;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CsvScores implements Scores {
 
     List<Score> scoreList = new ArrayList<>();
-    private static CsvScores csvScores = new CsvScores();
-    private CsvScores(){}
 
-    /** TODO 2 :
-     * Java Singleton 패턴으로 getInstance() 를 구현하세요.
-     **/
-    public static Scores getInstance() {
-        return CsvScores.csvScores;
+    public CsvScores() {
+
     }
 
-    // TODO 5 : score.csv 파일에서 데이터를 읽어 멤버 변수에 추가하는 로직을 구현하세요.
     @Override
     public void load() {
         ClassLoader classLoader = this.getClass().getClassLoader();
